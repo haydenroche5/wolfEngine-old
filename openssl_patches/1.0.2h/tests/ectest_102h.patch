@@ -1,0 +1,24 @@
+diff --git a/crypto/ec/ectest.c b/crypto/ec/ectest.c
+index 40a1f00325..492599948f 100644
+--- a/crypto/ec/ectest.c
++++ b/crypto/ec/ectest.c
+@@ -1831,6 +1831,19 @@ static const char rnd_seed[] =
+ 
+ int main(int argc, char *argv[])
+ {
++    ENGINE *e = NULL;
++
++    ENGINE_load_dynamic();
++    e = ENGINE_by_id("wolfengine");
++    if (e == NULL) {
++        printf("Failed to find wolfEngine.\n");
++        return 1;
++    }
++    if (ENGINE_ctrl_cmd(e, "enable_debug", 1, NULL, NULL, 0) != 1) {
++        printf("Failed to enable wolfEngine debug logging.\n");
++        return 1;
++    }
++    ENGINE_set_default(e, ENGINE_METHOD_ALL);
+ 
+     /* enable memory leak checking unless explicitly disabled */
+     if (!((getenv("OPENSSL_DEBUG_MEMORY") != NULL)
